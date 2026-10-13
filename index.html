@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>DHL Country SEO Snapshot</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -313,6 +313,21 @@
      clickable. Reset the affordance; keep the uppercase label styling. ---- */
   thead th{ cursor:default; }
   thead th:hover{ color:var(--text-muted); }
+
+  /* ---- Quick Snapshot monthly/weekly tables (main + other-language): numbers
+     centered in their column per request, rather than the site-wide right-align.
+     The headers must be centered too (not just the data cells) -- otherwise the
+     site-wide thead th{text-align:left} rule leaves each header sitting flush-
+     left while its own data sits centered below it, which reads as the numbers
+     being pushed off to the right relative to their header. Leave the first
+     ("Market . metric") column left-aligned, matching its left-aligned row labels. ---- */
+  #hubMonthlyTable tbody td.num, #hubWeeklyTable tbody td.num,
+  #hubMonthlyTableExtra tbody td.num, #hubWeeklyTableExtra tbody td.num{ text-align:center; }
+  #hubMonthlyTable thead th:not(:first-child), #hubWeeklyTable thead th:not(:first-child),
+  #hubMonthlyTableExtra thead th:not(:first-child), #hubWeeklyTableExtra thead th:not(:first-child){ text-align:center; }
+
+  /* ---- Weekly breakdown headers: the exact date range each Week-N covers. ---- */
+  thead th .wk-range{ display:block; font-weight:400; text-transform:none; letter-spacing:0; font-size:9.5px; color:var(--text-muted); margin-top:2px; }
 </style>
 
 <div id="pwGate">
@@ -410,6 +425,20 @@
       </details>
       <div id="trendCharts" class="trend-grid"></div>
       <span class="trend-note">Bars show Mar&rsquo;26&ndash;Oct&rsquo;26 (left to right); the brightest bar is the latest month. Hover a bar for the exact number.</span>
+    </div>
+    <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
+      <div class="sec-head" style="margin:0;">
+        <div class="titlewrap"><h2 style="font-size:14px;">Other-language Discover pages</h2></div>
+        <span class="hint">UAE &amp; Saudi Arabia in Arabic, Morocco in French</span>
+      </div>
+      <details class="info-box" open>
+        <summary>See the exact numbers, month by month</summary>
+        <div class="info-body"><div class="tbl-wrap"><table id="hubMonthlyTableExtra"></table></div></div>
+      </details>
+      <details class="info-box" open>
+        <summary>October, broken down by week</summary>
+        <div class="info-body"><div class="tbl-wrap"><table id="hubWeeklyTableExtra"></table></div></div>
+      </details>
     </div>
   </section>
 
@@ -628,7 +657,7 @@
   }
 
   (function renderWeeklyTable(){
-    var head = '<thead><tr><th>Market &middot; metric</th><th>Week-1</th><th>Week-2</th><th>Week-3</th><th>Week-4</th><th>Week-5</th><th>Oct&rsquo;26 Overall</th></tr></thead>';
+    var head = '<thead><tr><th>Market &middot; metric</th><th>Week-1<br><span class="wk-range">Sep 27&ndash;Oct 3</span></th><th>Week-2<br><span class="wk-range">Oct 4&ndash;10</span></th><th>Week-3<br><span class="wk-range">Oct 11&ndash;17</span></th><th>Week-4<br><span class="wk-range">Oct 18&ndash;24</span></th><th>Week-5<br><span class="wk-range">Oct 25&ndash;31</span></th><th>Oct&rsquo;26 Overall</th></tr></thead>';
     var body = MARKETS.map(function(m){
       var h = HUB[m.id];
       var overallT = h.wkTraffic.filter(function(v){return v!==null;}).pop();
@@ -678,6 +707,64 @@
     document.getElementById("trendCharts").innerHTML = html;
   }
   renderTrendCharts();
+
+  // ---- Quick Snapshot: other-language Discover pages (UAE Arabic, Saudi Arabia
+  // Arabic, Morocco French) -- confirmed live via a direct check before linking.
+  // UAE (Arabic) and Saudi Arabia (Arabic) got their first-ever Semrush reading
+  // on Oct 12, 2026 (Organic Traffic/Keywords for that subfolder); prior months
+  // stay null since no pull exists for them (never invent historical data).
+  // Morocco (French) was checked live on Oct 12, 2026 and Semrush returns no
+  // Organic Traffic/Keywords data at all for that subfolder (n/a), so it stays
+  // null -- not an oversight, confirmed unavailable.
+  var HUB_LANG_MARKETS = [
+    {id:"ae_ar", name:"UAE (Arabic)", url:"https://www.dhl.com/discover/ar-ae"},
+    {id:"sa_ar", name:"Saudi Arabia (Arabic)", url:"https://www.dhl.com/discover/ar-sa"},
+    {id:"ma_fr", name:"Morocco (French)", url:"https://www.dhl.com/discover/fr-ma"}
+  ];
+  function noData8(){ return [null,null,null,null,null,null,null,null]; }
+  function noData5(){ return [null,null,null,null,null]; }
+  var HUB_LANG = {
+    ae_ar: { traffic:[null,null,null,null,null,null,null,46], keywords:[null,null,null,null,null,null,null,144],
+              wkTraffic:[null,46,null,null,null], wkKeywords:[null,144,null,null,null] },
+    sa_ar: { traffic:[null,null,null,null,null,null,null,8], keywords:[null,null,null,null,null,null,null,15],
+              wkTraffic:[null,8,null,null,null], wkKeywords:[null,15,null,null,null] },
+    ma_fr: { traffic:noData8(), keywords:noData8(), wkTraffic:noData5(), wkKeywords:noData5() }
+  };
+  function hubLangLink(m, label){
+    return '<a href="'+m.url+'" target="_blank" rel="noopener" title="Open the DHL Discover hub for '+m.name+'">'+m.name+' &middot; '+label+'</a>';
+  }
+  (function renderMonthlyTableExtra(){
+    var head = '<thead><tr><th>Market &middot; metric</th>' + HUB_MONTHS.map(function(mo){ return '<th>'+mo+'</th>'; }).join("") + '</tr></thead>';
+    var body = HUB_LANG_MARKETS.map(function(m){
+      var h = HUB_LANG[m.id];
+      var rowT = '<tr><td class="kw">'+hubLangLink(m,'Traffic')+'</td>' + h.traffic.map(wkCell).join("") + '</tr>';
+      var rowK = '<tr><td class="kw">'+hubLangLink(m,'Keywords')+'</td>' + h.keywords.map(wkCell).join("") + '</tr>';
+      return rowT + rowK;
+    }).join("");
+    document.getElementById("hubMonthlyTableExtra").innerHTML = head + '<tbody>'+body+'</tbody>';
+  })();
+  (function renderWeeklyTableExtra(){
+    var head = '<thead><tr><th>Market &middot; metric</th>'+
+      '<th>Week-1<br><span class="wk-range">Sep 27&ndash;Oct 3</span></th>'+
+      '<th>Week-2<br><span class="wk-range">Oct 4&ndash;10</span></th>'+
+      '<th>Week-3<br><span class="wk-range">Oct 11&ndash;17</span></th>'+
+      '<th>Week-4<br><span class="wk-range">Oct 18&ndash;24</span></th>'+
+      '<th>Week-5<br><span class="wk-range">Oct 25&ndash;31</span></th>'+
+      '<th>Oct&rsquo;26 Overall</th></tr></thead>';
+    var body = HUB_LANG_MARKETS.map(function(m){
+      var h = HUB_LANG[m.id];
+      var overallT = h.wkTraffic.filter(function(v){return v!==null;}).pop();
+      var overallK = h.wkKeywords.filter(function(v){return v!==null;}).pop();
+      var rowT = '<tr><td class="kw">'+hubLangLink(m,'Traffic')+'</td>'+
+        wkCell(h.wkTraffic[0]) + wkCell(h.wkTraffic[1]) + wkCell(h.wkTraffic[2]) + wkCell(h.wkTraffic[3]) + wkCell(h.wkTraffic[4]) +
+        '<td class="num" style="font-weight:700;">'+(overallT!==undefined?overallT.toLocaleString():"&ndash;")+'</td></tr>';
+      var rowK = '<tr><td class="kw">'+hubLangLink(m,'Keywords')+'</td>'+
+        wkCell(h.wkKeywords[0]) + wkCell(h.wkKeywords[1]) + wkCell(h.wkKeywords[2]) + wkCell(h.wkKeywords[3]) + wkCell(h.wkKeywords[4]) +
+        '<td class="num" style="font-weight:700;">'+(overallK!==undefined?overallK.toLocaleString():"&ndash;")+'</td></tr>';
+      return rowT + rowK;
+    }).join("");
+    document.getElementById("hubWeeklyTableExtra").innerHTML = head + '<tbody>'+body+'</tbody>';
+  })();
 
   // ---- Performance view: all-markets glance row + selected-market detail ----
   var perfSel = document.getElementById("perfMarketSelect");
