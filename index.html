@@ -682,15 +682,15 @@
 
   var HUB = {
     pk: { traffic:[9407,8367,6120,6874,8185,8605,9000,10100], keywords:[1125,1002,997,822,788,779,757,807],
-          wkTraffic:[9700,10100,9700,10100,null], wkKeywords:[772,775,802,807,null] },
+          wkTraffic:[null,9700,10100,9700,10100], wkKeywords:[null,772,775,802,807] },
     ae: { traffic:[1329,1161,611,948,1067,942,949,883], keywords:[355,313,366,426,402,449,490,455],
-          wkTraffic:[911,800,677,883,null], wkKeywords:[476,475,441,455,null] },
+          wkTraffic:[null,911,800,677,883], wkKeywords:[null,476,475,441,455] },
     ma: { traffic:[null,null,null,null,null,null,0,0], keywords:[null,null,null,null,null,6,11,11],
-          wkTraffic:[0,0,0,0,null], wkKeywords:[12,12,12,11,null] },
+          wkTraffic:[null,0,0,0,0], wkKeywords:[null,12,12,12,11] },
     eg: { traffic:[null,null,null,null,null,12,26,15], keywords:[null,null,null,null,null,45,73,66],
-          wkTraffic:[21,21,14,15,null], wkKeywords:[65,66,65,66,null] },
+          wkTraffic:[null,21,21,14,15], wkKeywords:[null,65,66,65,66] },
     sa: { traffic:[null,null,null,null,null,null,5,21], keywords:[null,null,null,null,null,null,89,96],
-          wkTraffic:[16,18,19,21,null], wkKeywords:[84,87,97,96,null] }
+          wkTraffic:[null,16,18,19,21], wkKeywords:[null,84,87,97,96] }
   };
 
   var HUB_URL = {
@@ -800,11 +800,11 @@
   function noData5(){ return [null,null,null,null,null]; }
   var HUB_LANG = {
     ae_ar: { traffic:[null,null,null,null,null,null,null,59], keywords:[null,null,null,null,null,null,null,113],
-              wkTraffic:[null,46,59,59,null], wkKeywords:[null,144,121,113,null] },
+              wkTraffic:[null,null,46,59,59], wkKeywords:[null,null,144,121,113] },
     sa_ar: { traffic:[null,null,null,null,null,null,null,8], keywords:[null,null,null,null,null,null,null,26],
-              wkTraffic:[null,8,8,8,null], wkKeywords:[null,15,22,26,null] },
+              wkTraffic:[null,null,8,8,8], wkKeywords:[null,null,15,22,26] },
     ma_fr: { traffic:[null,null,null,null,null,null,null,0], keywords:[null,null,null,null,null,null,null,3],
-              wkTraffic:[null,null,null,0,null], wkKeywords:[null,null,null,3,null] }
+              wkTraffic:[null,null,null,null,0], wkKeywords:[null,null,null,null,3] }
   };
   function hubLangLink(m, label){
     return '<a href="'+m.url+'" target="_blank" rel="noopener" title="Open the DHL Discover hub for '+m.name+'">'+m.name+' &middot; '+label+'</a>';
