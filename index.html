@@ -412,7 +412,7 @@
   <section class="view active" data-view="snapshot">
     <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
       <div class="sec-head" style="margin:0;">
-        <div class="titlewrap"><h2 style="font-size:14px;">Visitors from search -- last 9 months</h2></div>
+        <div class="titlewrap"><h2 style="font-size:14px;">Visitors from search -- last 8 months</h2></div>
         <span class="hint">DHL's blog &amp; advice hub only, English version</span>
       </div>
       <details class="info-box" open>
@@ -420,11 +420,11 @@
         <div class="info-body"><div class="tbl-wrap"><table id="hubMonthlyTable"></table></div></div>
       </details>
       <details class="info-box" open>
-        <summary>November, broken down by week</summary>
+        <summary>October, broken down by week</summary>
         <div class="info-body"><div class="tbl-wrap"><table id="hubWeeklyTable"></table></div></div>
       </details>
       <div id="trendCharts" class="trend-grid"></div>
-      <span class="trend-note">Bars show Mar&rsquo;26&ndash;Nov&rsquo;26 (left to right); the brightest bar is the latest month. Hover a bar for the exact number.</span>
+      <span class="trend-note">Bars show Mar&rsquo;26&ndash;Oct&rsquo;26 (left to right); the brightest bar is the latest month. Hover a bar for the exact number.</span>
     </div>
     <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
       <div class="sec-head" style="margin:0;">
@@ -436,7 +436,7 @@
         <div class="info-body"><div class="tbl-wrap"><table id="hubMonthlyTableExtra"></table></div></div>
       </details>
       <details class="info-box" open>
-        <summary>November, broken down by week</summary>
+        <summary>October, broken down by week</summary>
         <div class="info-body"><div class="tbl-wrap"><table id="hubWeeklyTableExtra"></table></div></div>
       </details>
     </div>
@@ -678,19 +678,19 @@
       ]
     },
   ];
-  var HUB_MONTHS = ["Mar’26","Apr’26","May’26","Jun’26","Jul’26","Aug’26","Sep’26","Oct’26","Nov’26"];
+  var HUB_MONTHS = ["Mar’26","Apr’26","May’26","Jun’26","Jul’26","Aug’26","Sep’26","Oct’26"];
 
   var HUB = {
-    pk: { traffic:[9407,8367,6120,6874,8185,8605,9000,10100,10100], keywords:[1125,1002,997,822,788,779,757,807,812],
-          wkTraffic:[10100,null,null,null,null], wkKeywords:[812,null,null,null,null] },
-    ae: { traffic:[1329,1161,611,948,1067,942,949,883,892], keywords:[355,313,366,426,402,449,490,455,457],
-          wkTraffic:[892,null,null,null,null], wkKeywords:[457,null,null,null,null] },
-    ma: { traffic:[null,null,null,null,null,null,0,0,0], keywords:[null,null,null,null,null,6,11,11,11],
-          wkTraffic:[0,null,null,null,null], wkKeywords:[11,null,null,null,null] },
-    eg: { traffic:[null,null,null,null,null,12,26,15,15], keywords:[null,null,null,null,null,45,73,66,66],
-          wkTraffic:[15,null,null,null,null], wkKeywords:[66,null,null,null,null] },
-    sa: { traffic:[null,null,null,null,null,null,5,21,21], keywords:[null,null,null,null,null,null,89,96,97],
-          wkTraffic:[21,null,null,null,null], wkKeywords:[97,null,null,null,null] }
+    pk: { traffic:[9407,8367,6120,6874,8185,8605,9000,10100], keywords:[1125,1002,997,822,788,779,757,812],
+          wkTraffic:[9700,10100,9700,10100,10100], wkKeywords:[772,775,802,807,812] },
+    ae: { traffic:[1329,1161,611,948,1067,942,949,892], keywords:[355,313,366,426,402,449,490,457],
+          wkTraffic:[911,800,677,883,892], wkKeywords:[476,475,441,455,457] },
+    ma: { traffic:[null,null,null,null,null,null,0,0], keywords:[null,null,null,null,null,6,11,11],
+          wkTraffic:[0,0,0,0,0], wkKeywords:[12,12,12,11,11] },
+    eg: { traffic:[null,null,null,null,null,12,26,15], keywords:[null,null,null,null,null,45,73,66],
+          wkTraffic:[21,21,14,15,15], wkKeywords:[65,66,65,66,66] },
+    sa: { traffic:[null,null,null,null,null,null,5,21], keywords:[null,null,null,null,null,null,89,97],
+          wkTraffic:[16,18,19,21,21], wkKeywords:[84,87,97,96,97] }
   };
 
   var HUB_URL = {
@@ -732,7 +732,7 @@
   }
 
   (function renderWeeklyTable(){
-    var head = '<thead><tr><th>Market &middot; metric</th><th>Week-1<br><span class="wk-range">Nov 1&ndash;7</span></th><th>Week-2<br><span class="wk-range">Nov 8&ndash;14</span></th><th>Week-3<br><span class="wk-range">Nov 15&ndash;21</span></th><th>Week-4<br><span class="wk-range">Nov 22&ndash;28</span></th><th>Week-5<br><span class="wk-range">Nov 29&ndash;30</span></th><th>Nov&rsquo;26 Overall</th></tr></thead>';
+    var head = '<thead><tr><th>Market &middot; metric</th><th>Week-1<br><span class="wk-range">Sep 27&ndash;Oct 3</span></th><th>Week-2<br><span class="wk-range">Oct 4&ndash;10</span></th><th>Week-3<br><span class="wk-range">Oct 11&ndash;17</span></th><th>Week-4<br><span class="wk-range">Oct 18&ndash;24</span></th><th>Week-5<br><span class="wk-range">Oct 25&ndash;31</span></th><th>Oct&rsquo;26 Overall</th></tr></thead>';
     var body = MARKETS.map(function(m){
       var h = HUB[m.id];
       var overallT = h.wkTraffic.filter(function(v){return v!==null;}).pop();
@@ -799,12 +799,12 @@
   function noData8(){ return [null,null,null,null,null,null,null,null]; }
   function noData5(){ return [null,null,null,null,null]; }
   var HUB_LANG = {
-    ae_ar: { traffic:[null,null,null,null,null,null,null,59,59], keywords:[null,null,null,null,null,null,null,113,110],
-              wkTraffic:[59,null,null,null,null], wkKeywords:[110,null,null,null,null] },
-    sa_ar: { traffic:[null,null,null,null,null,null,null,8,16], keywords:[null,null,null,null,null,null,null,26,29],
-              wkTraffic:[16,null,null,null,null], wkKeywords:[29,null,null,null,null] },
-    ma_fr: { traffic:[null,null,null,null,null,null,null,0,null], keywords:[null,null,null,null,null,null,null,3,null],
-              wkTraffic:[null,null,null,null,null], wkKeywords:[null,null,null,null,null] }
+    ae_ar: { traffic:[null,null,null,null,null,null,null,59], keywords:[null,null,null,null,null,null,null,110],
+              wkTraffic:[null,46,59,59,59], wkKeywords:[null,144,121,113,110] },
+    sa_ar: { traffic:[null,null,null,null,null,null,null,16], keywords:[null,null,null,null,null,null,null,29],
+              wkTraffic:[null,8,8,8,16], wkKeywords:[null,15,22,26,29] },
+    ma_fr: { traffic:[null,null,null,null,null,null,null,0], keywords:[null,null,null,null,null,null,null,3],
+              wkTraffic:[null,null,null,0,null], wkKeywords:[null,null,null,3,null] }
   };
   function hubLangLink(m, label){
     return '<a href="'+m.url+'" target="_blank" rel="noopener" title="Open the DHL Discover hub for '+m.name+'">'+m.name+' &middot; '+label+'</a>';
@@ -821,12 +821,12 @@
   })();
   (function renderWeeklyTableExtra(){
     var head = '<thead><tr><th>Market &middot; metric</th>'+
-      '<th>Week-1<br><span class="wk-range">Nov 1&ndash;7</span></th>'+
-      '<th>Week-2<br><span class="wk-range">Nov 8&ndash;14</span></th>'+
-      '<th>Week-3<br><span class="wk-range">Nov 15&ndash;21</span></th>'+
-      '<th>Week-4<br><span class="wk-range">Nov 22&ndash;28</span></th>'+
-      '<th>Week-5<br><span class="wk-range">Nov 29&ndash;30</span></th>'+
-      '<th>Nov&rsquo;26 Overall</th></tr></thead>';
+      '<th>Week-1<br><span class="wk-range">Sep 27&ndash;Oct 3</span></th>'+
+      '<th>Week-2<br><span class="wk-range">Oct 4&ndash;10</span></th>'+
+      '<th>Week-3<br><span class="wk-range">Oct 11&ndash;17</span></th>'+
+      '<th>Week-4<br><span class="wk-range">Oct 18&ndash;24</span></th>'+
+      '<th>Week-5<br><span class="wk-range">Oct 25&ndash;31</span></th>'+
+      '<th>Oct&rsquo;26 Overall</th></tr></thead>';
     var body = HUB_LANG_MARKETS.map(function(m){
       var h = HUB_LANG[m.id];
       var overallT = h.wkTraffic.filter(function(v){return v!==null;}).pop();
