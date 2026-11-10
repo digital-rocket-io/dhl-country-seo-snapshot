@@ -329,7 +329,7 @@
   /* ---- Weekly breakdown headers: the exact date range each Week-N covers. ---- */
   thead th .wk-range{ display:block; font-weight:400; text-transform:none; letter-spacing:0; font-size:9.5px; color:var(--text-muted); margin-top:2px; }
 
-  /* ---- 10 Nov 2026: market chips (competitors) + country distribution box ---- */
+  /* ---- market chips (competitors) + country distribution box ---- */
   .mk-chips{ display:flex; gap:6px; flex-wrap:wrap; }
   .mk-chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 9px; border-radius:999px; font-size:11px; font-weight:700; border:1px solid var(--border); color:var(--text-muted); background:transparent; opacity:.45; }
   .mk-chip i{ width:7px; height:7px; border-radius:50%; display:inline-block; background:var(--text-muted); }
@@ -343,6 +343,12 @@
   .cd-row .v small{ color:var(--text-muted); font-weight:500; }
   .cd-track{ height:10px; border-radius:5px; background:var(--surface-2); overflow:hidden; }
   .cd-fill{ height:100%; border-radius:5px; }
+  .cd-box{ grid-column:span 2; gap:8px; }
+  .cd-box .cd-row{ grid-template-columns:96px 1fr 70px; gap:8px; }
+  .cd-box .cc{ font-size:11.5px; font-weight:700; color:var(--text-1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .cd-box .cd-track{ height:8px; }
+  .cd-box .v{ font-size:12px; }
+  @media (max-width:480px){ .cd-box .cd-row{ grid-template-columns:80px 1fr 62px; } }
   #hubWorldTable tbody td.num{ text-align:center; }
   #hubWorldTable thead th:not(:first-child){ text-align:center; }
 </style>
@@ -429,6 +435,16 @@
   <section class="view active" data-view="snapshot">
     <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
       <div class="sec-head" style="margin:0;">
+        <div class="titlewrap"><h2 style="font-size:14px;">Global search visitors -- last 9 months</h2></div>
+        <span class="hint">DHL's blog &amp; advice hub, English version, all countries</span>
+      </div>
+      <details class="info-box" open>
+        <summary>See the exact numbers, month by month</summary>
+        <div class="info-body"><div class="tbl-wrap"><table id="hubWorldTable"></table></div></div>
+      </details>
+    </div>
+    <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
+      <div class="sec-head" style="margin:0;">
         <div class="titlewrap"><h2 style="font-size:14px;">Visitors from search -- last 9 months</h2></div>
         <span class="hint">DHL's blog &amp; advice hub only, English version</span>
       </div>
@@ -444,17 +460,6 @@
       <span class="trend-note">Bars show Mar&rsquo;26&ndash;Nov&rsquo;26 (left to right); the brightest bar is the latest month. Hover a bar for the exact number.</span>
     </div>
 
-    <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
-      <div class="sec-head" style="margin:0;">
-        <div class="titlewrap"><h2 style="font-size:14px;">Global visitors from search -- every country</h2></div>
-        <span class="hint">Same English hubs, counted worldwide instead of one country</span>
-      </div>
-      <details class="info-box" open>
-        <summary>Worldwide traffic and keywords, month by month</summary>
-        <div class="info-body"><div class="tbl-wrap"><table id="hubWorldTable"></table></div>
-          <p class="foot-ref" style="margin-top:8px;">Semrush Worldwide database, desktop, read 10 Nov 2026 from the monthly trend; Nov&rsquo;26 is month to date. &ndash; means Semrush recorded no keywords for that hub that month. UAE&rsquo;s October jump is branded traffic from the UK (about 4.9K of 5.5K), not UAE readers.</p></div>
-      </details>
-    </div>
     <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
       <div class="sec-head" style="margin:0;">
         <div class="titlewrap"><h2 style="font-size:14px;">Other-language Discover pages</h2></div>
@@ -482,7 +487,6 @@
     <div class="glance-row" id="glanceRow"></div>
     <div class="kpi-grid" id="perfKpiGrid"></div>
     <span class="hint" id="perfKpiSub"></span>
-    <div class="card" id="perfCountryCard" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;"></div>
   </section>
 
   <section class="view" data-view="keywords">
@@ -505,7 +509,6 @@
     <div class="filter-btns" id="compFilters"></div>
     <div class="comp-legend" id="compLegend"></div>
     <div class="comp-grid" id="compGrid"></div>
-    <p class="foot-ref">Source: Semrush Organic Research &gt; Competitors for each hub (discover/en-ae, en-sa, en-pk, en-ma, en-eg) in its own country database, read 10 Nov 2026. A highlighted market means the site is among that hub's top 30 organic competitors; the figure is how many keywords it shares with the hub. DHL group sites (express.dhl, dhlexpress.*, dhl.de and similar) are left out. Much of the overlap is DHL tracking searches, so tracking sites rank high.</p>
   </section>
 
   <section class="view" data-view="blogs">
@@ -790,18 +793,15 @@
   var HUB_WW = {"pk":{"t":[9330,8563,6295,7289,9764,10428,9501,10810,11367],"k":[2048,1767,1768,1593,1570,1495,1407,1387,1406],"b":[5270,4372,2147,3226,5827,6224,6607,7023,6716]},"ae":{"t":[789,700,646,1016,1154,1037,1103,5466,5702],"k":[1406,1478,1686,1828,1477,1443,1353,1261,1271],"b":[256,293,384,409,400,657,677,4942,5028]},"ma":{"t":[null,null,null,null,162,93,144,186,177],"k":[null,null,null,null,79,275,389,368,389],"b":[null,null,null,null,1,1,1,55,1]},"eg":{"t":[null,null,null,null,29,38,268,439,455],"k":[null,null,null,null,134,415,543,503,517],"b":[null,null,null,null,1,3,74,23,23]},"sa":{"t":[null,null,null,null,50,162,413,178,352],"k":[null,null,null,null,165,322,349,354,374],"b":[null,null,null,null,23,15,7,11,9]}};
   var COUNTRY_DIST = {"ae":{"total":5700,"kw":1300,"top":[["UK",4500,93],["AE",844,440],["US",140,170]],"home":["AE",844,440]},"sa":{"total":352,"kw":374,"top":[["SA",190,100],["BR",84,1],["RU",18,7]],"home":["SA",190,100]},"pk":{"total":11400,"kw":1400,"top":[["PK",10700,828],["DE",256,73],["US",195,170]],"home":["PK",10700,828]},"ma":{"total":177,"kw":389,"top":[["UK",53,25],["US",40,95],["ZA",25,4]],"home":["MA",0,11]},"eg":{"total":455,"kw":517,"top":[["US",230,148],["BR",54,3],["UK",41,39]],"home":["EG",13,74]}};
   var COUNTRY_NAMES = {AE:"UAE",SA:"Saudi Arabia",PK:"Pakistan",MA:"Morocco",EG:"Egypt",UK:"United Kingdom",US:"United States",DE:"Germany",BR:"Brazil",RU:"Russia",ZA:"South Africa"};
-  function renderCountry(id){
+  function countryBox(id){
     var d = COUNTRY_DIST[id]; var m = MARKETS.filter(function(x){return x.id===id;})[0];
-    var el = document.getElementById("perfCountryCard"); if(!d||!el) return;
+    if(!d) return "";
     var max = d.top[0][1] || 1;
     var rows = d.top.map(function(r,i){
       var share = d.total ? Math.round(r[1]/d.total*100) : 0;
-      return '<div class="cd-row"><span class="cc">#'+(i+1)+' '+r[0]+'</span><div><div style="font-size:11.5px; color:var(--text-2); margin-bottom:3px;">'+(COUNTRY_NAMES[r[0]]||r[0])+'</div><div class="cd-track"><div class="cd-fill" style="width:'+Math.max(2,Math.round(r[1]/max*100))+'%; background:'+m.color+';"></div></div></div><span class="v">'+fmt(r[1])+' <small>('+share+'%)</small><br><small>'+fmt(r[2])+' kw</small></span></div>';
+      return '<div class="cd-row"><span class="cc">'+(COUNTRY_NAMES[r[0]]||r[0])+'</span><div class="cd-track"><div class="cd-fill" style="width:'+Math.max(3,Math.round(r[1]/max*100))+'%; background:'+m.color+';"></div></div><span class="v">'+fmt(r[1])+' <small>'+share+'%</small></span></div>';
     }).join("");
-    var inTop = d.top.some(function(r){return r[0]===d.home[0];});
-    var homeNote = inTop ? "" : '<p class="foot-ref">Home market '+(COUNTRY_NAMES[d.home[0]]||d.home[0])+' is not in the top 3: '+fmt(d.home[1])+' visits, '+fmt(d.home[2])+' keywords.</p>';
-    el.innerHTML = '<div class="sec-head" style="margin:0;"><div class="titlewrap"><h2 style="font-size:14px;">Distribution by country &middot; '+m.name+' hub</h2><p class="view-sub">Top 3 countries sending Google visitors to dhl.com/discover/en-'+id+'/ (worldwide total '+fmt(d.total)+' visits, '+fmt(d.kw)+' keywords).</p></div></div>' + rows + homeNote +
-      '<p class="foot-ref">Semrush Domain Overview, Google Search distribution, read 10 Nov 2026. Share = country visits / worldwide visits. Estimates, not DHL analytics.</p>';
+    return '<div class="kpi card cd-box"><span class="k-lbl">Distribution by country</span>'+rows+'<span class="k-sub">Top 3 countries, visitors from search</span></div>';
   }
   var TRAFFIC_COST = {sa:164600,ae:19500,pk:30800,ma:7500,eg:6700};
   var BACKLINKS_DOMAIN = 25700000, REFDOMAINS_DOMAIN = 97700;
@@ -832,14 +832,13 @@
   }
   renderTrendCharts();
 
-  // ---- Quick Snapshot: worldwide hub traffic (10 Nov 2026) ----
+  // ---- Quick Snapshot: global hub traffic ----
   (function renderWorldTable(){
     var head = '<thead><tr><th>Market &middot; metric</th>' + HUB_MONTHS.map(function(mo){ return '<th>'+mo+'</th>'; }).join("") + '</tr></thead>';
     var body = MARKETS.map(function(m){
       var h = HUB_WW[m.id]; if(!h) return "";
-      var link = function(label){ return '<a href="'+HUB_URL[m.id]+'" target="_blank" rel="noopener">'+m.name+' &middot; '+label+' (global)</a>'; };
-      return '<tr><td class="kw">'+link('Traffic')+'</td>' + h.t.map(wkCell).join("") + '</tr>' +
-             '<tr><td class="kw">'+link('Keywords')+'</td>' + h.k.map(wkCell).join("") + '</tr>';
+      var link = function(label){ return '<a href="'+HUB_URL[m.id]+'" target="_blank" rel="noopener">'+m.name+' &middot; '+label+'</a>'; };
+      return '<tr><td class="kw">'+link('Traffic')+'</td>' + h.t.map(wkCell).join("") + '</tr>';
     }).join("");
     document.getElementById("hubWorldTable").innerHTML = head + '<tbody>'+body+'</tbody>';
   })();
@@ -921,7 +920,6 @@
   function renderPerf(){
     var id = perfSel.value || MARKETS[0].id;
     var m = MARKETS.filter(function(x){return x.id===id;})[0];
-    renderCountry(id);
     var cells = [
       ["Visitors from search", "Organic traffic, est./month", fmt(m.orgTraffic), m.orgTrafficDelta],
       ["Search terms ranking", "Organic keywords", m.orgKeywords.toLocaleString(), m.orgKeywordsDelta],
@@ -936,7 +934,7 @@
       var d = c[3];
       var deltaHtml = (d===null||d===undefined) ? "" : '<span class="k-delta '+deltaClass(d)+'">'+pct(d)+'</span>';
       return '<div class="kpi card"><span class="k-lbl">'+c[0]+'</span><span class="k-val">'+c[2]+'</span><span class="k-sub">'+c[1]+'</span>'+deltaHtml+'</div>';
-    }).join("");
+    }).join("") + countryBox(id);
     document.getElementById("perfKpiSub").textContent =
       "Authority score " + m.authority + " \u00b7 " + fmt(BACKLINKS_DOMAIN) + " backlinks \u00b7 " + fmt(REFDOMAINS_DOMAIN) + " referring domains -- same across all 5 markets.";
   }
@@ -1000,7 +998,7 @@
       document.getElementById("compFilters").innerHTML = MK.map(function(f){ return '<button class="filter-btn" data-f="'+f[0]+'" aria-pressed="'+(sel===f[0])+'">'+f[1]+'</button>'; }).join("");
       var list = COMPETITORS.filter(function(c){ return sel==="all" || c.markets[sel]; });
       if(sel!=="all") list = list.slice().sort(function(a,b){ return b.markets[sel][1]-a.markets[sel][1]; });
-      document.getElementById("compLegend").textContent = list.length + " of 20 competitors" + (sel==="all" ? " \u00b7 coloured chips = markets where the site competes" : " compete in " + MK.filter(function(f){return f[0]===sel;})[0][1] + ", sorted by shared keywords");
+      document.getElementById("compLegend").textContent = (sel==="all" ? "20 competitors" : list.length + " competitors in " + MK.filter(function(f){return f[0]===sel;})[0][1]);
       document.getElementById("compGrid").innerHTML = list.map(function(c){
         var n = Object.keys(c.markets).length;
         var chips = ["sa","ae","pk","ma","eg"].map(function(k){
