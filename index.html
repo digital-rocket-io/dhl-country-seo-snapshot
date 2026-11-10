@@ -328,6 +328,23 @@
 
   /* ---- Weekly breakdown headers: the exact date range each Week-N covers. ---- */
   thead th .wk-range{ display:block; font-weight:400; text-transform:none; letter-spacing:0; font-size:9.5px; color:var(--text-muted); margin-top:2px; }
+
+  /* ---- 10 Nov 2026: market chips (competitors) + country distribution box ---- */
+  .mk-chips{ display:flex; gap:6px; flex-wrap:wrap; }
+  .mk-chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 9px; border-radius:999px; font-size:11px; font-weight:700; border:1px solid var(--border); color:var(--text-muted); background:transparent; opacity:.45; }
+  .mk-chip i{ width:7px; height:7px; border-radius:50%; display:inline-block; background:var(--text-muted); }
+  .mk-chip.on{ opacity:1; color:#fff; }
+  .mk-chip.on b{ font-weight:600; color:var(--text-2); font-variant-numeric:tabular-nums; }
+  .comp-card .cd-count{ font-size:11px; font-weight:700; color:var(--accent-2); }
+  .comp-legend{ font-size:11.5px; color:var(--text-muted); }
+  .cd-row{ display:grid; grid-template-columns:34px 1fr 88px; gap:10px; align-items:center; }
+  .cd-row .cc{ font-size:12px; font-weight:800; color:#fff; }
+  .cd-row .v{ font-size:12px; text-align:right; color:var(--text-1); font-variant-numeric:tabular-nums; font-weight:600; }
+  .cd-row .v small{ color:var(--text-muted); font-weight:500; }
+  .cd-track{ height:10px; border-radius:5px; background:var(--surface-2); overflow:hidden; }
+  .cd-fill{ height:100%; border-radius:5px; }
+  #hubWorldTable tbody td.num{ text-align:center; }
+  #hubWorldTable thead th:not(:first-child){ text-align:center; }
 </style>
 
 <div id="pwGate">
@@ -426,6 +443,18 @@
       <div id="trendCharts" class="trend-grid"></div>
       <span class="trend-note">Bars show Mar&rsquo;26&ndash;Nov&rsquo;26 (left to right); the brightest bar is the latest month. Hover a bar for the exact number.</span>
     </div>
+
+    <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
+      <div class="sec-head" style="margin:0;">
+        <div class="titlewrap"><h2 style="font-size:14px;">Global visitors from search -- every country</h2></div>
+        <span class="hint">Same English hubs, counted worldwide instead of one country</span>
+      </div>
+      <details class="info-box" open>
+        <summary>Worldwide traffic and keywords, month by month</summary>
+        <div class="info-body"><div class="tbl-wrap"><table id="hubWorldTable"></table></div>
+          <p class="foot-ref" style="margin-top:8px;">Semrush Worldwide database, desktop, read 10 Nov 2026 from the monthly trend; Nov&rsquo;26 is month to date. &ndash; means Semrush recorded no keywords for that hub that month. UAE&rsquo;s October jump is branded traffic from the UK (about 4.9K of 5.5K), not UAE readers.</p></div>
+      </details>
+    </div>
     <div class="card" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
       <div class="sec-head" style="margin:0;">
         <div class="titlewrap"><h2 style="font-size:14px;">Other-language Discover pages</h2></div>
@@ -453,6 +482,7 @@
     <div class="glance-row" id="glanceRow"></div>
     <div class="kpi-grid" id="perfKpiGrid"></div>
     <span class="hint" id="perfKpiSub"></span>
+    <div class="card" id="perfCountryCard" style="padding:16px 18px; display:flex; flex-direction:column; gap:12px;"></div>
   </section>
 
   <section class="view" data-view="keywords">
@@ -471,8 +501,11 @@
   </section>
 
   <section class="view" data-view="competitors">
-    <div class="sec-head"><div class="titlewrap"><h2>Content Competitors</h2><p class="view-sub">Who else shows up when people search the topics DHL's new blogs will cover.</p></div></div>
+    <div class="sec-head"><div class="titlewrap"><h2>Search Competitors</h2><p class="view-sub">The 20 sites that compete most with DHL's Discover hubs in Google, market by market.</p></div></div>
+    <div class="filter-btns" id="compFilters"></div>
+    <div class="comp-legend" id="compLegend"></div>
     <div class="comp-grid" id="compGrid"></div>
+    <p class="foot-ref">Source: Semrush Organic Research &gt; Competitors for each hub (discover/en-ae, en-sa, en-pk, en-ma, en-eg) in its own country database, read 10 Nov 2026. A highlighted market means the site is among that hub's top 30 organic competitors; the figure is how many keywords it shares with the hub. DHL group sites (express.dhl, dhlexpress.*, dhl.de and similar) are left out. Much of the overlap is DHL tracking searches, so tracking sites rank high.</p>
   </section>
 
   <section class="view" data-view="blogs">
@@ -753,7 +786,23 @@
   // ---------------- Expansion: work log, blog delivery, competitors, view router ----------------
   var WORK_LOG = [["1", "Technical SEO fixes", "Tech team need to update on website", "UAE", "Done", "10-03-2026", "Pending", "", "Discover tech issues", ""], ["2", "User Understanding data", "This helps SEO team to create content", "UAE/PAK", "Done", "10-03-2026", "None", "-", "-", ""], ["3", "New Blog Categories", "SEO team propose new blog category which can help us to add more targeted blogs to Discover section", "PAK", "Done", "10-03-2026", "Pending", "", "SEO Optimization", ""], ["4", "New Blog Categories", "SEO team propose new blog category which can help us to add more targeted blogs to Discover section", "UAE", "Done", "10-03-2026", "Pending", "", "SEO Optimization", ""], ["5", "Meta update for Hub pages", "Need to upload meta to hub pages", "UAE", "Done", "18-03-2026", "Pending", "", "SEO Optimization", ""], ["6", "Keyword Research", "No dependency", "PAK", "Done", "08-04-2026", "Pending", "", "DHL PAK 2026-April.xlsx", ""], ["7", "4 New blog outlines", "Need to make this blog live", "PAK", "Done", "15-04-2026", "Done", "", "New Blog Briefs/Outline : Pakistan", ""], ["8", "5 new blog outlines", "Need to make this blog live", "UAE", "Done", "24-04-2026", "Pending", "", "New Blog Briefs/Outline : UAE", ""], ["9", "Meta update for blogs", "Meta of blogs needs to updated", "UAE", "Done", "07-05-2026", "Pending", "", "Meta Updates", ""], ["10", "Quick Response Blogs", "This blog is focused on war related information for DHL customer", "UAE", "Done", "25-03-2026", "Pending", "", "Quick response blog", ""], ["11", "10 First batch of Blogs", "Need to make this blog live", "PAK", "Done", "15-05-2026", "Pending", "", "DHL_PK_Batch1_ContentBriefs.docx", ""], ["12", "10 Second batch of blogs", "Need to make this blog live", "PAK", "Done", "19-05-2026", "Pending", "", "DHL_PK_Batch2_ContentBriefs.docx", ""], ["13", "16 Third batch of blogs", "This is ask from Raza", "PAK", "Done", "19-05-2026", "In Process", "", "DHL PAK Blog batch 3", ""], ["14", "Restructure of Ship With DHL", "There is no content in this page which needed to add update", "UAE", "Done", "12-05-2026", "Pending", "", "Restructure of Ship With DHL", ""], ["15", "28 Blog topics", "Need confirmation for this blogs topics to create blog outlines", "PAK", "Done", "02-06-2026", "Pending", "", "Blog Intent", ""], ["16", "17 Blog topics", "Need confirmation for this blogs topics to create blog outlines", "UAE", "Done", "09-06-2026", "Pending", "", "Blog Intent", ""], ["17", "1 Blog Outlines", "Gloria Ask to provide optimization for UAE blog", "UAE", "Done", "25-05-2026", "Pending", "", "UAE Gloria Blog", ""], ["18", "Search Console Code", "Need to share code to add in website", "UAE/PAK", "Done", "18-07-206", "Not able to Execute", "", "", "date-typo"], ["19", "SEO Audit for SA & MAR", "Do SEO audit to identify any major issues if its there.", "SA / MAR", "Done", "21-07-2026", "", "", "SEO Audit SA & MAR", ""], ["20", "SEO Keyword Research", "To identify corridors of SA we have to do keyword research", "SA", "Done", "23-07-2026", "", "", "DHL - KSA & MAR Keyword Research.xlsx", ""], ["21", "SEO Keyword Research", "To identify corridors of MAR we have to do keyword research", "MAR", "Done", "23-07-2027", "", "", "DHL - KSA & MAR Keyword Research.xlsx", "date-typo"], ["22", "User Persona and Understanding for SA, MAR & EG", "This helps SEO team to create content", "SA / MAR", "Done", "24-07-2026", "", "", "DHL - User Understanding SA, MAR, & EG", ""], ["23", "Blog Topics for SA", "Create blog topics according to SA corridor research", "SA", "Done", "27-07-2026", "", "", "Blog topics for KSA & MAR", ""], ["24", "Blog Topics for MAR", "Create blog topics according to MAR corridor research", "MAR", "Done", "27-07-2026", "", "", "Blog topics for KSA & MAR", ""], ["25", "SEO Audit for EG", "Do SEO audit to identify any major issues if its there.", "EG", "Done", "28-07-2026", "", "", "SEO Audit SA & MAR", ""], ["26", "SEO Keyword Research EG", "To identify corridors of EG we have to do keyword research", "EG", "Done", "08-08-2028", "", "", "DHL - KSA & MAR Keyword Research.xlsx", "date-typo"], ["27", "Blog Topics for EG", "To identify corridors of EG we have to do keyword research", "EG", "Done", "12-08-2026", "", "", "DHL - KSA, MAR & EG Blog topics", ""], ["28", "Meta Title & Description", "Improve current metas for all hub pages", "SA", "Done", "22-08-2026", "", "", "DHL SA, MAR, EG Metas", ""], ["29", "Meta Title & Description", "Improve current metas for all hub pages", "MAR", "Done", "25-08-2026", "", "", "DHL SA, MAR, EG Metas", ""], ["30", "Meta Title & Description", "Improve current metas for all hub pages", "EG", "Done", "01-08-2026", "", "", "DHL SA, MAR, EG Metas", ""], ["30.1", "Sub Category Meta", "", "", "", "", "", "", "", ""], ["31", "Provide executables to DHL", "We received audit from dhl team and to provide explanation to it.", "All", "Done", "", "", "", "DHL Audit 07-10-2026", ""], ["32", "Chinese Keyword Study", "Audited Chinese keywords and proposed blogs suggetion for that.", "UAE", "Done", "", "", "", "Chinese keywords for UAE - DHL", ""], ["33", "Audit all blogs of Pakistan", "After audit proposed require changes for blogs", "PAK", "Done", "", "", "", "No Blog require to change", ""], ["34", "Audit all blogs of UAE", "After audit proposed require changes for blogs", "UAE", "Done", "", "", "", "UAE all Blogs Report", ""], ["35", "Audit all blogs of SA", "After audit proposed require changes for blogs", "SA", "Done", "", "", "", "KSA all Blogs Report", ""], ["36", "Audit all blogs of MAR", "After audit proposed require changes for blogs", "MAR", "", "", "", "", "", ""], ["37", "Deliver intent-based blogs (both markets)", "Once We recive confirmation on task number 15 and 16 we will pick this up", "UAE/PAK", "Not Picked", "", "", "", "", ""], ["38", "New metas for old blogs", "Need to identify blogs which require new meta tags and work on it", "PAK", "In Process", "", "", "", "", ""], ["39", "Write 20 old-blog briefs", "Need to identify old blogs to rewrite and prepare doc on it for approval", "UAE", "In Process", "", "", "", "", ""], ["40", "Internal link audit", "Need to do audit for internal link to add on all blogs", "UAE/PAK", "Not Picked", "", "", "", "", ""], ["41", "FAQ audit + implementation strategy", "Identify which blog require FAQs on it and create straategy for it.", "UAE/PAK", "Not Picked", "", "", "", "", ""], ["42", "Crawl / index review of blog section", "Once Task 18 is done start working on this one.", "UAE/PAK", "Not Picked", "", "", "", "", ""], ["43", "Topic-cannibalisation cleanup audit", "Based on Task no 24 this task will picked", "UAE/PAK", "Not Picked", "", "", "", "", ""]];
   var BLOG_DELIVERY = {"sa": [["Saudi Made: A Practical Guide to Exporting Saudi Products to the World", "exporting saudi products, export from saudi, how to export from saudi", "Multi-corridor", "Bottom of funnel", true], ["International Shipping Rates from Saudi Arabia: What Affects Your Price", "اسعار الشحن الدولي dhl (AR), shipping companies, dhl international shipping", "Multi-corridor", "Bottom of funnel", true], ["How Saudi Businesses Can Make the Most of the National Day Sales Season", "Saudi National Day sales, offers, promotions, deals", "-", "Bottom of funnel", true], ["Shipping from China to Saudi Arabia: The Complete Importer's Guide", "china to saudi arabia shipping, shipping cost from china to saudi arabia", "China -> KSA (inbound)", "Middle of funnel", true], ["Social Seller for Ramadan", "-", "-", "-", true], ["How Much Does Cargo to India from Saudi Arabia Cost? Price per Kg Explained (2026)", "saudi to india cargo price per kg, cargo saudi to india, door to door cargo from saudi arabia to india price", "KSA -> India", "Bottom of funnel", false], ["Cargo to Pakistan from Riyadh, Jeddah & Dammam: Rates, Timelines & Door-to-Door Options", "cargo to pakistan, cargo from ksa to pakistan, cargo to pakistan from riyadh", "KSA -> Pakistan", "Bottom of funnel", false], ["Sending Cargo to the Philippines from Saudi Arabia: Air vs Sea, Costs & What You Can Ship", "cargo riyadh to philippines, cargo dammam to philippines, sea cargo from riyadh to philippines", "KSA -> Philippines", "Middle of funnel", false], ["Shipping from the USA to Saudi Arabia: Costs, Customs Duties & Delivery Times", "shipping to saudi arabia from usa, cheapest shipping from usa to saudi arabia, shipping cost from usa to saudi arabia", "USA -> KSA (inbound)", "Middle of funnel", false], ["Does Amazon or eBay Ship to Saudi Arabia? Every Way to Get Your Order Delivered", "does amazon ship to saudi arabia, does ebay ship to saudi arabia, shop and ship", "Inbound e-commerce", "Top of funnel", false], ["Door-to-Door Cargo from Saudi Arabia: How It Works and What It Costs", "door to door cargo, door to door cargo jeddah, door to door cargo riyadh to pakistan", "Multi-corridor", "Middle of funnel", false], ["CIF, FOB & DDP Explained: Shipping Incoterms Every Saudi Importer Should Know", "cif meaning in shipping, fob shipping meaning, ddp meaning in shipping", "B2B / informational", "Top of funnel", false], ["How to Track Your International Shipment to and from Saudi Arabia", "dhl tracking ksa, cargo tracking, air cargo tracking", "Brand support", "Bottom of funnel", false], ["Shipping a Car Between Saudi Arabia and the USA: Step-by-Step Guide", "shipping car from saudi arabia to usa, how to ship a car from usa to saudi arabia", "KSA <-> USA (vehicles)", "Middle of funnel", false], ["Sending Cargo to Sri Lanka, Bangladesh & Nepal from Saudi Arabia: Expat Guide", "air cargo saudi to sri lanka, cargo to bangladesh, saudi to nepal cargo", "KSA -> South Asia", "Middle of funnel", false]], "ma": [["Shipping from Morocco to the USA: Costs, Customs & Delivery Times (2026 Guide)", "shipping from morocco to usa, shipping cost from morocco to usa, how to ship from morocco to usa", "Morocco -> USA", "Bottom of funnel", true], ["Exporting from Morocco: A Shipping Guide for Small Businesses & E-commerce Sellers", "international shipping from morocco, shipping services, what is drop shipping", "Outbound B2B/e-commerce", "Top of funnel", true], ["How to Ship Moroccan Rugs & Handicrafts Overseas Safely", "shipping a rug from morocco, shipping rugs from morocco to usa", "Morocco -> World (artisan e-commerce)", "Middle of funnel", true], ["Shipping from Morocco to the UK: Rates, Customs & Transit Times", "shipping from morocco to uk, shipping to morocco from uk", "Morocco <-> UK", "Bottom of funnel", true], ["Shipping from Morocco to Canada: A Complete Guide", "shipping from morocco to canada, shipping from canada to morocco", "Morocco <-> Canada", "Bottom of funnel", false], ["Importing from China to Morocco: Shipping Costs, Timelines & Customs", "shipping cost from china to morocco, shipping from china to morocco", "China -> Morocco (inbound)", "Middle of funnel", false], ["Does Amazon Ship to Morocco? All Your Delivery Options Explained", "amazon shipping to morocco, does amazon ship to morocco, shop and ship", "Inbound e-commerce", "Top of funnel", false], ["DHL Service Points in Morocco: Locations in Casablanca, Rabat, Marrakech & More", "dhl express servicepoint, dhl casablanca, dhl express marrakech, dhl tanger", "Brand support (city pages)", "Bottom of funnel", false], ["How to Track Your DHL Parcel in Morocco (Suivi Colis)", "dhl tracking maroc, suivi dhl, suivi colis dhl", "Brand support", "Bottom of funnel", false], ["Shipping from Morocco to Europe: France, Spain & Beyond", "shipping from morocco to europe, international shipping from morocco", "Morocco -> Europe", "Middle of funnel", false], ["DHL Morocco Prices: How International Shipping Rates Are Calculated", "dhl maroc prix, dhl maroc contact", "Brand support (pricing)", "Bottom of funnel", false]], "eg": [["Egypt's Manufacturing Exports Are Growing: How Fast International Shipping Supports Global Competitiveness", "Egyptian manufacturing exports, Egypt exports, manufacturing in Egypt", "-", "-", true], ["Shipping from Egypt to Saudi Arabia: Costs, Transit Times and How to Send", "شحن من مصر للسعودية, شركات شحن من مصر للسعودية, شحن دولي من مصر للسعودية", "Egypt -> KSA", "Bottom of funnel", true], ["Egypt Customs Explained: Duties, Clearance and the Documents You Need", "شركات الشحن والتخليص الجمركي, رسوم التخليص الجمركي dhl", "B2B / informational", "Top of funnel", true], ["With the Rise of Egyptian HealthTech and Medical Manufacturers, How Can You Prepare for International Expansion", "exporting medical devices from Egypt, Egyptian medical device manufacturers", "B2B / informational", "Top of funnel", true], ["Sending Parcels from Egypt to the UAE and Kuwait: A Complete Gulf Shipping Guide", "شركات شحن من مصر للامارات, شحن من مصر للكويت", "Egypt -> Gulf", "Middle of funnel", false], ["Shipping from Egypt to the USA: Rates, Customs and What You Can Send", "سعر الشحن من مصر الى امريكا, shipping from egypt to usa", "Egypt -> USA", "Bottom of funnel", false], ["Shipping to Egypt from the USA, UK and Germany: Costs and Delivery Times", "shipping from usa to egypt, shipping from uk to egypt", "Inbound - West", "Middle of funnel", false], ["Importing from China to Egypt: Air vs Sea Freight, Costs and Customs", "شركات شحن من الصين لمصر, shipping from china to egypt", "China -> Egypt (inbound)", "Middle of funnel", false], ["Shipping a Car to Egypt from Germany, the UAE or Saudi Arabia", "سعر شحن سياره من المانيا الى مصر", "Inbound (vehicles)", "Middle of funnel", false], ["Does Shein, Amazon or AliExpress Ship to Egypt? Your Delivery Options Explained", "does shein ship to egypt, amazon shipping to egypt", "Inbound e-commerce", "Top of funnel", false], ["CIF, FOB and DDP: Shipping Incoterms Every Egyptian Exporter Should Know", "fob shipping, cif shipping, ddp abbreviation shipping, incoterms dhl", "B2B / informational", "Top of funnel", false], ["International vs Domestic Shipping in Egypt: Choosing the Right Service", "شركات شحن داخل مصر, شحن دولي", "Domestic vs international", "Middle of funnel", false], ["How to Track an International Shipment from Egypt", "تتبع شحنة dhl, dhl tracking egypt, cargo tracking", "Brand support", "Bottom of funnel", false], ["Air Freight vs Sea Freight from Egypt: Which Should Your Business Use?", "شركات شحن جوي, شركات الشحن البحرى فى مصر", "B2B / freight", "Middle of funnel", false]]};
-  var COMPETITORS = [{"domain": "shipbob.com", "type": "Fulfilment platform running a programmatic content hub", "evidence": ["shipping from Saudi Arabia to USA customs duty guide", "shipping from Egypt to USA customs guide cost"], "note": "Templated “Shipping to {country} From the US” pages exist for both KSA and Egypt corridors -- a scaled programmatic pattern, not a one-off article."}, {"domain": "eurosender.com", "type": "Freight marketplace / content hub", "evidence": ["shipping cost from China to Morocco customs guide", "shipping from Egypt to USA customs guide cost"], "note": "Has a templated “Express shipping from {origin} to {destination}” guide series covering multiple corridors relevant to DHL's new blog topics."}, {"domain": "planetexpress.com", "type": "Package-forwarding service blog", "evidence": ["shipping from Saudi Arabia to USA customs duty guide", "shipping from Egypt to USA customs guide cost"], "note": "Ranks with dedicated “Shipping from the USA to {country}” guides for both KSA and Egypt."}, {"domain": "exfreight.com", "type": "Freight forwarder content hub", "evidence": ["shipping from Saudi Arabia to USA customs duty guide"], "note": "Dated/titled “[2026 Guide]” corridor content, direct overlap with DHL's planned USA↔KSA blog topic."}, {"domain": "sino-shipping.com", "type": "China-based freight forwarder / customs broker, country-guide content", "evidence": ["shipping cost from China to Morocco customs guide", "cargo to Pakistan from Riyadh Jeddah rates door to door"], "note": "Runs “freight China-to-{country}” and “shipping-from-china-to-{country}” guide pages across multiple of DHL's markets (Morocco, Pakistan) -- a China-outbound specialist competing on the same inbound-to-market content DHL is planning."}, {"domain": "easyship.com", "type": "Shipping software / duties calculator with content pages", "evidence": ["shipping cost from China to Morocco customs guide"], "note": "Has a live “duties-and-taxes-calculator” page for Morocco; this product-page format is a different content type than DHL's planned narrative blog, worth noting for format benchmarking."}];
+  var COMPETITORS = [{"domain":"aftership.com","type":"Parcel-tracking platform","markets":{"ae":[9,77],"sa":[16,101],"pk":[16,105],"ma":[22,13],"eg":[18,64]}},{"domain":"parcelsapp.com","type":"Parcel-tracking aggregator","markets":{"ae":[8,84],"sa":[11,55],"pk":[13,137],"ma":[16,12],"eg":[12,41]}},{"domain":"17track.net","type":"Parcel-tracking aggregator","markets":{"ae":[3,35],"sa":[5,27],"pk":[5,55],"ma":[18,11],"eg":[5,19]}},{"domain":"ship24.com","type":"Parcel-tracking aggregator","markets":{"ae":[6,27],"sa":[3,11],"pk":[8,36],"ma":[18,9],"eg":[4,8]}},{"domain":"fedex.com","type":"Express carrier","markets":{"ae":[9,228],"sa":[11,139],"pk":[7,100],"eg":[6,43]}},{"domain":"ups.com","type":"Express carrier","markets":{"ae":[5,103],"sa":[7,86],"pk":[6,95],"eg":[4,24]}},{"domain":"trackcourier.io","type":"Courier-tracking aggregator","markets":{"ae":[10,69],"sa":[5,22],"pk":[6,57],"ma":[12,3]}},{"domain":"maersk.com","type":"Ocean freight & logistics","markets":{"ae":[4,77],"sa":[4,27],"pk":[4,42],"eg":[4,21]}},{"domain":"trackingmore.com","type":"Tracking platform / API","markets":{"pk":[3,28],"ma":[5,4],"eg":[8,21]}},{"domain":"searates.com","type":"Freight rates & tracking platform","markets":{"ae":[3,66],"sa":[4,43],"eg":[6,38]}},{"domain":"clickpost.ai","type":"Logistics & tracking software","markets":{"ae":[9,46],"sa":[6,23],"pk":[12,25]}},{"domain":"4tracking.net","type":"Parcel-tracking aggregator","markets":{"sa":[7,57],"eg":[12,52]}},{"domain":"tryoto.com","type":"Shipping platform for online sellers","markets":{"sa":[6,79],"eg":[6,40]}},{"domain":"easyship.com","type":"Shipping software for online sellers","markets":{"ae":[7,54],"pk":[6,33]}},{"domain":"aramex.com","type":"Express carrier (regional)","markets":{"eg":[7,75]}},{"domain":"emiratespost.ae","type":"National postal operator, UAE","markets":{"ae":[6,141]}},{"domain":"splonline.com.sa","type":"National postal operator, Saudi Arabia","markets":{"sa":[5,162]}},{"domain":"naqelexpress.com","type":"Express courier, Saudi Arabia","markets":{"sa":[5,81]}},{"domain":"bosta.co","type":"E-commerce delivery, Egypt","markets":{"eg":[6,52]}},{"domain":"callcourier.com.pk","type":"Courier, Pakistan","markets":{"pk":[3,45]}}];
+  var HUB_WW = {"pk":{"t":[9330,8563,6295,7289,9764,10428,9501,10810,11367],"k":[2048,1767,1768,1593,1570,1495,1407,1387,1406],"b":[5270,4372,2147,3226,5827,6224,6607,7023,6716]},"ae":{"t":[789,700,646,1016,1154,1037,1103,5466,5702],"k":[1406,1478,1686,1828,1477,1443,1353,1261,1271],"b":[256,293,384,409,400,657,677,4942,5028]},"ma":{"t":[null,null,null,null,162,93,144,186,177],"k":[null,null,null,null,79,275,389,368,389],"b":[null,null,null,null,1,1,1,55,1]},"eg":{"t":[null,null,null,null,29,38,268,439,455],"k":[null,null,null,null,134,415,543,503,517],"b":[null,null,null,null,1,3,74,23,23]},"sa":{"t":[null,null,null,null,50,162,413,178,352],"k":[null,null,null,null,165,322,349,354,374],"b":[null,null,null,null,23,15,7,11,9]}};
+  var COUNTRY_DIST = {"ae":{"total":5700,"kw":1300,"top":[["UK",4500,93],["AE",844,440],["US",140,170]],"home":["AE",844,440]},"sa":{"total":352,"kw":374,"top":[["SA",190,100],["BR",84,1],["RU",18,7]],"home":["SA",190,100]},"pk":{"total":11400,"kw":1400,"top":[["PK",10700,828],["DE",256,73],["US",195,170]],"home":["PK",10700,828]},"ma":{"total":177,"kw":389,"top":[["UK",53,25],["US",40,95],["ZA",25,4]],"home":["MA",0,11]},"eg":{"total":455,"kw":517,"top":[["US",230,148],["BR",54,3],["UK",41,39]],"home":["EG",13,74]}};
+  var COUNTRY_NAMES = {AE:"UAE",SA:"Saudi Arabia",PK:"Pakistan",MA:"Morocco",EG:"Egypt",UK:"United Kingdom",US:"United States",DE:"Germany",BR:"Brazil",RU:"Russia",ZA:"South Africa"};
+  function renderCountry(id){
+    var d = COUNTRY_DIST[id]; var m = MARKETS.filter(function(x){return x.id===id;})[0];
+    var el = document.getElementById("perfCountryCard"); if(!d||!el) return;
+    var max = d.top[0][1] || 1;
+    var rows = d.top.map(function(r,i){
+      var share = d.total ? Math.round(r[1]/d.total*100) : 0;
+      return '<div class="cd-row"><span class="cc">#'+(i+1)+' '+r[0]+'</span><div><div style="font-size:11.5px; color:var(--text-2); margin-bottom:3px;">'+(COUNTRY_NAMES[r[0]]||r[0])+'</div><div class="cd-track"><div class="cd-fill" style="width:'+Math.max(2,Math.round(r[1]/max*100))+'%; background:'+m.color+';"></div></div></div><span class="v">'+fmt(r[1])+' <small>('+share+'%)</small><br><small>'+fmt(r[2])+' kw</small></span></div>';
+    }).join("");
+    var inTop = d.top.some(function(r){return r[0]===d.home[0];});
+    var homeNote = inTop ? "" : '<p class="foot-ref">Home market '+(COUNTRY_NAMES[d.home[0]]||d.home[0])+' is not in the top 3: '+fmt(d.home[1])+' visits, '+fmt(d.home[2])+' keywords.</p>';
+    el.innerHTML = '<div class="sec-head" style="margin:0;"><div class="titlewrap"><h2 style="font-size:14px;">Distribution by country &middot; '+m.name+' hub</h2><p class="view-sub">Top 3 countries sending Google visitors to dhl.com/discover/en-'+id+'/ (worldwide total '+fmt(d.total)+' visits, '+fmt(d.kw)+' keywords).</p></div></div>' + rows + homeNote +
+      '<p class="foot-ref">Semrush Domain Overview, Google Search distribution, read 10 Nov 2026. Share = country visits / worldwide visits. Estimates, not DHL analytics.</p>';
+  }
   var TRAFFIC_COST = {sa:164600,ae:19500,pk:30800,ma:7500,eg:6700};
   var BACKLINKS_DOMAIN = 25700000, REFDOMAINS_DOMAIN = 97700;
 
@@ -782,6 +831,18 @@
     document.getElementById("trendCharts").innerHTML = html;
   }
   renderTrendCharts();
+
+  // ---- Quick Snapshot: worldwide hub traffic (10 Nov 2026) ----
+  (function renderWorldTable(){
+    var head = '<thead><tr><th>Market &middot; metric</th>' + HUB_MONTHS.map(function(mo){ return '<th>'+mo+'</th>'; }).join("") + '</tr></thead>';
+    var body = MARKETS.map(function(m){
+      var h = HUB_WW[m.id]; if(!h) return "";
+      var link = function(label){ return '<a href="'+HUB_URL[m.id]+'" target="_blank" rel="noopener">'+m.name+' &middot; '+label+' (global)</a>'; };
+      return '<tr><td class="kw">'+link('Traffic')+'</td>' + h.t.map(wkCell).join("") + '</tr>' +
+             '<tr><td class="kw">'+link('Keywords')+'</td>' + h.k.map(wkCell).join("") + '</tr>';
+    }).join("");
+    document.getElementById("hubWorldTable").innerHTML = head + '<tbody>'+body+'</tbody>';
+  })();
 
   // ---- Quick Snapshot: other-language Discover pages (UAE Arabic, Saudi Arabia
   // Arabic, Morocco French) -- confirmed live via a direct check before linking.
@@ -860,6 +921,7 @@
   function renderPerf(){
     var id = perfSel.value || MARKETS[0].id;
     var m = MARKETS.filter(function(x){return x.id===id;})[0];
+    renderCountry(id);
     var cells = [
       ["Visitors from search", "Organic traffic, est./month", fmt(m.orgTraffic), m.orgTrafficDelta],
       ["Search terms ranking", "Organic keywords", m.orgKeywords.toLocaleString(), m.orgKeywordsDelta],
@@ -930,13 +992,31 @@
 
   // ---- Competitors view ----
   (function renderCompetitors(){
-    document.getElementById("compGrid").innerHTML = COMPETITORS.map(function(c){
-      return '<div class="comp-card card">' +
-        '<div class="cd-top"><span class="cd-name">'+c.domain+'</span><span class="cd-type">'+c.type+'</span></div>' +
-        '<p class="cd-note">'+c.note+'</p>' +
-        '<p class="cd-evidence"><b>Showed up for:</b> '+c.evidence.join(' &middot; ')+'</p>' +
-        '</div>';
-    }).join("");
+    var MK = [["all","All markets"],["sa","Saudi Arabia"],["ae","UAE"],["pk","Pakistan"],["ma","Morocco"],["eg","Egypt"]];
+    var MKC = {sa:"var(--m-sa)",ae:"var(--m-ae)",pk:"var(--m-pk)",ma:"var(--m-ma)",eg:"var(--m-eg)"};
+    var MKS = {sa:"KSA",ae:"UAE",pk:"PAK",ma:"MAR",eg:"EGY"};
+    var sel = "all";
+    function draw(){
+      document.getElementById("compFilters").innerHTML = MK.map(function(f){ return '<button class="filter-btn" data-f="'+f[0]+'" aria-pressed="'+(sel===f[0])+'">'+f[1]+'</button>'; }).join("");
+      var list = COMPETITORS.filter(function(c){ return sel==="all" || c.markets[sel]; });
+      if(sel!=="all") list = list.slice().sort(function(a,b){ return b.markets[sel][1]-a.markets[sel][1]; });
+      document.getElementById("compLegend").textContent = list.length + " of 20 competitors" + (sel==="all" ? " \u00b7 coloured chips = markets where the site competes" : " compete in " + MK.filter(function(f){return f[0]===sel;})[0][1] + ", sorted by shared keywords");
+      document.getElementById("compGrid").innerHTML = list.map(function(c){
+        var n = Object.keys(c.markets).length;
+        var chips = ["sa","ae","pk","ma","eg"].map(function(k){
+          var v = c.markets[k];
+          return v ? '<span class="mk-chip on" style="border-color:'+MKC[k]+'; background:color-mix(in srgb, '+MKC[k]+' 22%, transparent);"><i style="background:'+MKC[k]+';"></i>'+MKS[k]+' <b>'+v[1]+' kw</b></span>'
+                   : '<span class="mk-chip"><i></i>'+MKS[k]+'</span>';
+        }).join("");
+        return '<div class="comp-card card">' +
+          '<div class="cd-top"><span class="cd-name">'+c.domain+'</span><span class="cd-type">'+c.type+'</span></div>' +
+          '<span class="cd-count">'+(n===5?'All 5 markets':(n+' of 5 markets'))+'</span>' +
+          '<div class="mk-chips">'+chips+'</div>' +
+          '</div>';
+      }).join("");
+      document.querySelectorAll("#compFilters .filter-btn").forEach(function(b){ b.addEventListener("click", function(){ sel = b.getAttribute("data-f"); draw(); }); });
+    }
+    draw();
   })();
 
   // ---- Blog Delivery view ----
